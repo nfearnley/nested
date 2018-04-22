@@ -1,40 +1,65 @@
 var nested = {};
 
+nested.invalidTreeError = "invalid tree";
+nested.invalidPathError = "invalid path";
+nested.nonObjectError = "path contains non-object";
+
 function setNested(tree, path, value) {
+    if (typeof tree !== "object") {
+        throw nested.invalidTreeError;
+    }
+
     if (typeof path === "string") {
         path = path.split(".");
     }
-    var leaf = tree;
-    path.forEach(function(p, i) {
-        if (i === path.length - 1 && value !== undefined) {
-            leaf[p] = value;;
-        }
-        else if (leaf[p] === undefined) {
+    if (!Array.isArray(path) || path.length === 0) {
+        throw nested.invalidPathError; 
+    }
+
+    if (value === undefined) {
+        value = {};
+    }
+
+    var prop = path.pop();
+    var leaf = path.reduce(function(leaf, p) {
+        console.log(leaf, p);
+        if (leaf[p] === undefined) {
             leaf[p] = {};
         }
-        else if (typeof leaf[p] !== object) {
-            throw "Invalid path";
+        if (typeof leaf[p] !== "object") {
+            throw nested.nonObjectError;
         }
-        leaf = leaf[p];
-    });
+        return leaf[p];
+    }, tree);
+
+    return leaf[prop] = value;
    
 }
 nested.set = setNested;
 
 function getNested(tree, path) {
+    if (typeof tree !== "object") {
+        throw nested.invalidTreeError;
+    }
+
     if (typeof path === "string") {
         path = path.split(".");
     }
-    var leaf = tree;
-    path.forEach(function(p, i) {
-        if (i === path.length - 1 || leaf === undefined) {
-            return leaf;
+    if (!Array.isArray(path) || path.legth === 0) {
+        throw nested.invalidPathError; 
+    }
+
+    var value = path.reduce(function(leaf, p) {
+        if (leaf === undefined) {
+            return undefined;
         }
-        else if (typeof leaf[p] !== object) {
-            throw "Invalid path";
+        if (typeof leaf !== "object") {
+            throw nested.nonObjectError;
         }
-        leaf = leaf[p];
-    });
+        return leaf[p];
+    }, tree);
+
+    return value; 
 }
 nested.get = getNested;
 

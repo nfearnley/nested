@@ -10,7 +10,7 @@
     "mocha": "^5.1.1"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "./node_modules/.bin/mocha"
   },
   "author": "Natalie Fearnley",
   "license": ""
