@@ -22,7 +22,6 @@ function setNested(tree, path, value) {
 
     var prop = path.pop();
     var leaf = path.reduce(function(leaf, p) {
-        console.log(leaf, p);
         if (leaf[p] === undefined) {
             leaf[p] = {};
         }
